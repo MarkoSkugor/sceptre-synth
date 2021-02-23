@@ -1,0 +1,118 @@
+$white-key-width: 60;
+$black-key-width: 40;
+$keyboard-height: 200;
+
+.keyboard__container {
+  display: flex;
+  height: #{$keyboard-height}px;
+  margin: 25px auto 0;
+}
+
+.keyboard__octave {
+  flex-shrink: 0;
+  position: relative;
+  width: #{$white-key-width * 7}px;
+
+  + .keyboard__octave > *:first-child {
+    border-left: none;
+  }
+
+  > * {
+    position: absolute;
+
+    &:nth-child(1),
+    &:nth-child(3),
+    &:nth-child(5),
+    &:nth-child(6),
+    &:nth-child(8),
+    &:nth-child(10),
+    &:nth-child(12) {
+      background: white;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      width: #{$white-key-width}px;
+      height: #{$keyboard-height}px;
+
+      &:hover {
+        background: #eee;
+      }
+
+      &.active,
+      &:active {
+        background: #71AF4B;
+      }
+
+      &:not(:last-child) {
+        border-right: none;
+      }
+    }
+
+    &:nth-child(2),
+    &:nth-child(4),
+    &:nth-child(7),
+    &:nth-child(9),
+    &:nth-child(11) {
+      background: #000;
+      width: #{$black-key-width}px;
+      height: #{$keyboard-height * .6}px;
+      z-index: 2;
+
+      &:hover {
+        background: #222
+      }
+
+      &.active,
+      &:active {
+        background: #71AF4B;
+      }
+    }
+
+    &:nth-child(1) {
+      left: #{$white-key-width * 0}px;
+    }
+
+    &:nth-child(3) {
+      left: #{$white-key-width * 1}px;
+    }
+
+    &:nth-child(5) {
+      left: #{$white-key-width * 2}px;
+    }
+
+    &:nth-child(6) {
+      left: #{$white-key-width * 3}px;
+    }
+
+    &:nth-child(8) {
+      left: #{$white-key-width * 4}px;
+    }
+
+    &:nth-child(10) {
+      left: #{$white-key-width * 5}px;
+    }
+
+    &:nth-child(12) {
+      left: #{$white-key-width * 6}px;
+    }
+
+    &:nth-child(2) {
+      left: #{($white-key-width * 1) - ($black-key-width / 2)}px;
+    }
+
+    &:nth-child(4) {
+      left: #{($white-key-width * 2) - ($black-key-width / 2)}px;
+    }
+
+    &:nth-child(7) {
+      left: #{($white-key-width * 4) - ($black-key-width / 2)}px;
+    }
+
+    &:nth-child(9) {
+      left: #{($white-key-width * 5) - ($black-key-width / 2)}px;
+    }
+
+    &:nth-child(11) {
+      left: #{($white-key-width * 6) - ($black-key-width / 2)}px;
+    }
+  }
+}

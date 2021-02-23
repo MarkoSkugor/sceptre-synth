@@ -1,0 +1,45 @@
+.button {
+  display: inline-block;
+  padding: 25px;
+  background-color: #222;
+  position: relative;
+  transform: translate3d(5px, -5px, 0);
+  box-shadow: 0px 0px 0 #444, -1px 1px 0 #444, -2px 2px 0 #444, -3px 3px 0 #444, -4px 4px 0 #444, -5px 5px 0 #444;
+
+  &__container {
+    color: white;
+    font-weight: normal;
+    text-align: center;
+    text-transform: uppercase;
+    margin: 11px 10px 10px;
+    position: relative;
+  }
+
+  &:disabled {
+    color: #5e5e5e;
+  }
+
+  &:active,
+  &:disabled,
+  &.active {
+    transition: all .001s ease;
+    transform: translate3d(0, 0, 0);
+    box-shadow: 0 0 0 0 #444;
+
+    &:hover {
+      box-shadow: 0 0 0 0 #5e5e5e;
+    }
+  }
+
+  &:not(:active):not(.active) {
+    transition: all .2s ease;
+  }
+
+  &:not(:disabled):hover {
+    background-color: #2f2f2f;
+
+    &:not(:active):not(.active) {
+      box-shadow: 0px 0px 0 #5e5e5e, -1px 1px 0 #5e5e5e, -2px 2px 0 #5e5e5e, -3px 3px 0 #5e5e5e, -4px 4px 0 #5e5e5e, -5px 5px 0 #5e5e5e;
+    }
+  }
+}

@@ -1,0 +1,40 @@
+.switch {
+  background-color: #6E6E6E;
+  border-radius: 1rem;
+  height: 2rem;
+  width: 4rem;
+
+  &--active {
+    background-color: #71AF4B;
+
+    .switch__thumb {
+      border-color: #71AF4B;
+    }
+  }
+
+  &__container {
+    color: #e1e1e1;
+    display: inline-block;
+    font-family: monospace;
+    text-align: center;
+    padding: 0 18px 18px;
+  }
+
+  &__label {
+    position: relative;
+    top: -10px;
+    text-transform: uppercase;
+    font-size: 12px;
+    padding: 2px 4px;
+    background-color: #111;
+  }
+
+  &__thumb {
+    background-color: #222;
+    box-sizing: border-box;
+    border: 2px solid #6E6E6E;
+    border-radius: 50%;
+    height: 2rem;
+    width: 2rem;
+  }
+}

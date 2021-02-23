@@ -1,38 +1,74 @@
-.App {
-  text-align: center;
+body {
+  font-family: monospace;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+button {
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  overflow: visible;
+
+  background: transparent;
+
+  /* inherit font & color from ancestor */
+  color: inherit;
+  font: inherit;
+
+  /* Normalize `line-height`. Cannot be changed from `normal` in Firefox 4+. */
+  line-height: normal;
+
+  /* Corrects font smoothing for webkit */
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+
+  /* Corrects inability to style clickable `input` types in iOS */
+  -webkit-appearance: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+html {
+  display: flex;
+  height: 100%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+body {
+  align-items: center;
+  background-color: #111;
+  color: #e1e1e1;
+  display: flex;
+  font-family: monospace;
+  justify-content: center;
+  margin: auto;
+}
+
+.synth {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.synth__controls {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  max-width: 1100px;
 }
 
-.App-link {
-  color: #61dafb;
+.section {
+  border: 1px solid #d1d1d1;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 5px 10px 0px;
+  margin: 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.section__label {
+  display: table;
+  position: relative;
+  top: -15px;
+  text-transform: uppercase;
+  font-size: 15px;
+  padding: 2px 5px;
+  background-color: #111;
 }
