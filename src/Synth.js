@@ -35,6 +35,7 @@ class Synth extends React.Component {
     this.initializeScale();
     this.start = this.start.bind(this);
     this.setLevel = this.setLevel.bind(this);
+    this.setReverb = this.setReverb.bind(this);
     this.setAmpAttack = this.setAmpAttack.bind(this);
     this.setAmpRelease = this.setAmpRelease.bind(this);
     this.setFilterCutoff = this.setFilterCutoff.bind(this);
@@ -63,6 +64,10 @@ class Synth extends React.Component {
 
   setLevel(value) {
     this.synthEngine.setLevel(value);
+  }
+
+  setReverb(value) {
+    this.synthEngine.setReverb(value);
   }
 
   setAmpAttack(value) {
@@ -120,9 +125,10 @@ class Synth extends React.Component {
             <Knob
               label='Reverb'
               precision={2}
-              initialValue={0.1}
+              initialValue={0}
               minValue={0}
               maxValue={1}
+              valueChanged={this.setReverb}
             ></Knob>
           </div>
           <div className='section'>

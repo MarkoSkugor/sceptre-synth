@@ -21,18 +21,34 @@ class SynthEngine {
     this.initializeOscillatorNode();
     this.initializeFilterNode();
     this.initializeGainNode();
+    this.initializeReverb();
+    this.initializeCompressor();
 
     // connect nodes
     this.oscillatorNode.connect(this.filterNode1);
     this.filterNode1.connect(this.filterNode2);
-    this.filterNode2.connect(this.gainNode);
-    this.gainNode.connect(this.audioContext.destination);
+    this.filterNode2.connect(this.reverbNode);
+    this.filterNode2.connect(this.reverbDryGain);
+    this.reverbNode.connect(this.reverbWetGain);
+    this.reverbWetGain.connect(this.volumeNode);
+    this.reverbDryGain.connect(this.volumeNode);
+    this.volumeNode.connect(this.compressorNode);
+    this.compressorNode.connect(this.audioContext.destination);
     // start oscillator
     this.oscillatorNode.start();
   }
 
   setLevel(value) {
     this.settings.master.level = value;
+  }
+
+  setReverb(value) {
+    // equal-power crossfade
+    const drySignalGain = Math.cos(value * 0.5 * Math.PI);
+    const wetSignalGain = Math.cos((1.0 - value) * 0.5 * Math.PI);
+
+    this.reverbDryGain.gain.value = drySignalGain;
+    this.reverbWetGain.gain.value = wetSignalGain;
   }
 
   setAmpAttack(value) {
@@ -90,9 +106,9 @@ class SynthEngine {
 
   initializeGainNode() {
     // create Gain node
-    this.gainNode = this.audioContext.createGain();
+    this.volumeNode = this.audioContext.createGain();
     // set gain to 0 (no output)
-    this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+    this.volumeNode.gain.setValueAtTime(0, this.audioContext.currentTime);
   }
 
   initializeFilterNode() {
@@ -100,6 +116,31 @@ class SynthEngine {
     this.filterNode2 = this.audioContext.createBiquadFilter();
     this.filterNode1.type = 'lowpass';
     this.filterNode2.type = 'lowpass';
+  }
+
+  initializeReverb() {
+    this.reverbNode = this.audioContext.createConvolver();
+    this.reverbWetGain = this.audioContext.createGain();
+    this.reverbDryGain = this.audioContext.createGain();
+
+    const irRoomRequest = new XMLHttpRequest();
+
+    // get sound of room we want to emulate
+    irRoomRequest.open("GET", "/irRoom.wav", true);
+    irRoomRequest.responseType = "arraybuffer";
+    irRoomRequest.onload = () => {
+      this.audioContext.decodeAudioData(
+        irRoomRequest.response,
+        (buffer) => {
+          this.reverbNode.buffer = buffer;
+        },
+      );
+    }
+    irRoomRequest.send();
+  }
+
+  initializeCompressor() {
+    this.compressorNode = this.audioContext.createDynamicsCompressor();
   }
 
   triggerFilterEnvelope() {
@@ -136,18 +177,18 @@ class SynthEngine {
   triggerAmpEnvelope() {
     const now = this.audioContext.currentTime;
 
-    this.gainNode.gain.cancelScheduledValues(now);
-    this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
-    this.gainNode.gain.linearRampToValueAtTime(
+    this.volumeNode.gain.cancelScheduledValues(now);
+    this.volumeNode.gain.setValueAtTime(this.volumeNode.gain.value, now);
+    this.volumeNode.gain.linearRampToValueAtTime(
       this.settings.master.level,
       now + this.settings.amp.attack,
     );
-    this.gainNode.gain.setTargetAtTime(
+    this.volumeNode.gain.setTargetAtTime(
       0.0,
       now + this.settings.amp.attack,
       this.settings.amp.release / 10,
     );
-    this.gainNode.gain.setValueAtTime(0, now + this.settings.amp.attack + this.settings.amp.release);
+    this.volumeNode.gain.setValueAtTime(0, now + this.settings.amp.attack + this.settings.amp.release);
   }
 
   playTone(frequency) {
