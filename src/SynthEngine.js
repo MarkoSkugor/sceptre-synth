@@ -68,17 +68,20 @@ class SynthEngine {
     const now = this.audioContext.currentTime;
 
     this.oscillatorNode.frequency.value = frequency;
+
     this.gainNode.gain.cancelScheduledValues(now);
+    this.gainNode.gain.value = 0.0;
     this.gainNode.gain.setValueAtTime( 0.0, now );
     this.gainNode.gain.linearRampToValueAtTime(
       this.settings.master.level,
       now + this.settings.amp.attack,
     );
-    this.gainNode.gain.linearRampToValueAtTime(
-      0,
-      now + this.settings.amp.attack + this.settings.amp.release,
+    this.gainNode.gain.setTargetAtTime(
+      0.0,
+      now + this.settings.amp.attack,
+      this.settings.amp.release / 10,
     );
-    // this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime + 1);
+    this.gainNode.gain.setValueAtTime(0, now + this.settings.amp.attack + this.settings.amp.release);
   }
 }
 
