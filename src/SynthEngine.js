@@ -110,8 +110,8 @@ class SynthEngine {
     // filter setup and envelope
     this.filterNode1.frequency.cancelScheduledValues(now);
     this.filterNode2.frequency.cancelScheduledValues(now);
-    this.filterNode1.frequency.setValueAtTime(0, now);
-    this.filterNode2.frequency.setValueAtTime(0, now);
+    this.filterNode1.frequency.setValueAtTime(this.filterNode1.frequency.value, now);
+    this.filterNode2.frequency.setValueAtTime(this.filterNode2.frequency.value, now);
     this.filterNode1.Q.value = this.settings.filter.resonance;
     this.filterNode2.Q.value = this.settings.filter.resonance;
     this.filterNode1.frequency.linearRampToValueAtTime(
@@ -137,7 +137,7 @@ class SynthEngine {
 
     // amp setup and envelope
     this.gainNode.gain.cancelScheduledValues(now);
-    this.gainNode.gain.setValueAtTime(0.0, now);
+    this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
     this.gainNode.gain.linearRampToValueAtTime(
       this.settings.master.level,
       now + this.settings.amp.attack,
