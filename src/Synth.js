@@ -34,6 +34,9 @@ class Synth extends React.Component {
     };
     this.initializeScale();
     this.start = this.start.bind(this);
+    this.setLevel = this.setLevel.bind(this);
+    this.setAmpAttack = this.setAmpAttack.bind(this);
+    this.setAmpRelease = this.setAmpRelease.bind(this);
     this.onKeyPressed = this.onKeyPressed.bind(this);
   }
 
@@ -51,6 +54,18 @@ class Synth extends React.Component {
       let octave = new Octave(a);
       this.scale.push(octave);
     }
+  }
+
+  setLevel(value) {
+    this.synthEngine.setLevel(value);
+  }
+
+  setAmpAttack(value) {
+    this.synthEngine.setAmpAttack(value);
+  }
+
+  setAmpRelease(value) {
+    this.synthEngine.setAmpRelease(value);
   }
 
   onKeyPressed(octave, note) {
@@ -75,6 +90,7 @@ class Synth extends React.Component {
               initialValue={1}
               minValue={0}
               maxValue={1}
+              valueChanged={this.setLevel}
             ></Knob>
             <Knob
               label='Reverb'
@@ -93,6 +109,7 @@ class Synth extends React.Component {
               initialValue={0}
               minValue={0}
               maxValue={10}
+              valueChanged={this.setAmpAttack}
             ></Knob>
             <Knob
               label='Release'
@@ -101,6 +118,7 @@ class Synth extends React.Component {
               initialValue={1.5}
               minValue={0}
               maxValue={10}
+              valueChanged={this.setAmpRelease}
             ></Knob>
           </div>
           <div className='section'>

@@ -1,4 +1,14 @@
 class SynthEngine {
+  settings = {
+    master: {
+      level: 1,
+    },
+    amp: {
+      attack: 0.01,
+      release: 1.5,
+    },
+  };
+
   constructor() {
     this.initializeAudioContext();
     this.initializeOscillatorNode();
@@ -9,6 +19,18 @@ class SynthEngine {
     this.gainNode.connect(this.audioContext.destination);
     // start oscillator
     this.oscillatorNode.start();
+  }
+
+  setLevel(value) {
+    this.settings.master.level = value;
+  }
+
+  setAmpAttack(value) {
+    this.settings.amp.attack = value + .01;
+  }
+
+  setAmpRelease(value) {
+    this.settings.amp.release = value;
   }
 
   initializeAudioContext() {
@@ -43,14 +65,20 @@ class SynthEngine {
   }
 
   playTone(frequency) {
+    const now = this.audioContext.currentTime;
+
     this.oscillatorNode.frequency.value = frequency;
-    this.gainNode.gain.cancelScheduledValues(this.audioContext.currentTime);
-    this.gainNode.gain.setValueAtTime(1, this.audioContext.currentTime);
-    this.gainNode.gain.exponentialRampToValueAtTime(
-      0.0001,
-      this.audioContext.currentTime + 1,
+    this.gainNode.gain.cancelScheduledValues(now);
+    this.gainNode.gain.setValueAtTime( 0.0, now );
+    this.gainNode.gain.linearRampToValueAtTime(
+      this.settings.master.level,
+      now + this.settings.amp.attack,
     );
-    this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime + 1);
+    this.gainNode.gain.linearRampToValueAtTime(
+      0,
+      now + this.settings.amp.attack + this.settings.amp.release,
+    );
+    // this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime + 1);
   }
 }
 
