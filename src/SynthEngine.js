@@ -4,15 +4,15 @@ class SynthEngine {
       level: 1,
     },
     amp: {
-      attack: 0.01,
+      attack: 0.1,
       release: 1.5,
     },
     filter: {
       cutoff: 350,
-      resonance: 0.0001,
-      envelope: .5,
-      attack: 0,
-      release: 1.5,
+      resonance: 0,
+      envelope: .25,
+      attack: 0.1,
+      release: .5,
     }
   };
 
@@ -97,17 +97,14 @@ class SynthEngine {
 
   initializeFilterNode() {
     this.filterNode1 = this.audioContext.createBiquadFilter();
-    this.filterNode1.type = 'lowpass';
     this.filterNode2 = this.audioContext.createBiquadFilter();
+    this.filterNode1.type = 'lowpass';
     this.filterNode2.type = 'lowpass';
   }
 
-  playTone(frequency) {
+  triggerFilterEnvelope() {
     const now = this.audioContext.currentTime;
 
-    this.oscillatorNode.frequency.value = frequency;
-
-    // filter setup and envelope
     this.filterNode1.frequency.cancelScheduledValues(now);
     this.filterNode2.frequency.cancelScheduledValues(now);
     this.filterNode1.frequency.setValueAtTime(this.filterNode1.frequency.value, now);
@@ -134,8 +131,11 @@ class SynthEngine {
     );
     this.filterNode1.frequency.setValueAtTime(this.settings.filter.cutoff, now + this.settings.filter.attack + this.settings.filter.release);
     this.filterNode2.frequency.setValueAtTime(this.settings.filter.cutoff, now + this.settings.filter.attack + this.settings.filter.release);
+  }
 
-    // amp setup and envelope
+  triggerAmpEnvelope() {
+    const now = this.audioContext.currentTime;
+
     this.gainNode.gain.cancelScheduledValues(now);
     this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
     this.gainNode.gain.linearRampToValueAtTime(
@@ -148,8 +148,13 @@ class SynthEngine {
       this.settings.amp.release / 10,
     );
     this.gainNode.gain.setValueAtTime(0, now + this.settings.amp.attack + this.settings.amp.release);
+  }
 
+  playTone(frequency) {
+    this.oscillatorNode.frequency.value = frequency;
 
+    this.triggerFilterEnvelope();
+    this.triggerAmpEnvelope();
   }
 }
 

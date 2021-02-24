@@ -131,8 +131,8 @@ class Synth extends React.Component {
               label='Attack'
               units='s'
               precision={2}
-              initialValue={0}
-              minValue={0}
+              initialValue={0.1}
+              minValue={0.01}
               maxValue={10}
               valueChanged={this.setAmpAttack}
             ></Knob>
@@ -141,7 +141,7 @@ class Synth extends React.Component {
               units='s'
               precision={2}
               initialValue={1.5}
-              minValue={0}
+              minValue={0.1}
               maxValue={10}
               valueChanged={this.setAmpRelease}
             ></Knob>
@@ -152,8 +152,8 @@ class Synth extends React.Component {
               label='Attack'
               units='s'
               precision={2}
-              initialValue={0}
-              minValue={0}
+              initialValue={0.1}
+              minValue={0.01}
               maxValue={10}
               valueChanged={this.setFilterAttack}
             ></Knob>
@@ -161,8 +161,8 @@ class Synth extends React.Component {
               label='Release'
               units='s'
               precision={2}
-              initialValue={1.5}
-              minValue={0}
+              initialValue={.5}
+              minValue={0.01}
               maxValue={10}
               valueChanged={this.setFilterRelease}
             ></Knob>
@@ -180,16 +180,16 @@ class Synth extends React.Component {
             ></Knob>
             <Knob
               label='Resonance'
-              precision={4}
-              initialValue={0.0001}
-              minValue={0.0001}
-              maxValue={3}
+              precision={2}
+              initialValue={0}
+              minValue={0}
+              maxValue={10}
               valueChanged={this.setFilterResonance}
             ></Knob>
             <Knob
               label='Envelope'
               precision={2}
-              initialValue={.5}
+              initialValue={.25}
               minValue={0}
               maxValue={1}
               valueChanged={this.setFilterEnvelope}
