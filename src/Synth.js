@@ -125,7 +125,7 @@ class Synth extends React.Component {
             <Knob
               label='Reverb'
               precision={2}
-              initialValue={0}
+              initialValue={.25}
               minValue={0}
               maxValue={1}
               valueChanged={this.setReverb}

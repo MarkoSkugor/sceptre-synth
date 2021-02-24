@@ -13,7 +13,10 @@ class SynthEngine {
       envelope: .25,
       attack: 0.1,
       release: .5,
-    }
+    },
+    reverb: {
+      level: .25,
+    },
   };
 
   constructor() {
@@ -43,6 +46,8 @@ class SynthEngine {
   }
 
   setReverb(value) {
+    this.settings.reverb.level = value;
+
     // equal-power crossfade
     const drySignalGain = Math.cos(value * 0.5 * Math.PI);
     const wetSignalGain = Math.cos((1.0 - value) * 0.5 * Math.PI);
@@ -126,7 +131,7 @@ class SynthEngine {
     const irRoomRequest = new XMLHttpRequest();
 
     // get sound of room we want to emulate
-    irRoomRequest.open("GET", "/irRoom.wav", true);
+    irRoomRequest.open("GET", "/reverb-impulse-1.wav", true);
     irRoomRequest.responseType = "arraybuffer";
     irRoomRequest.onload = () => {
       this.audioContext.decodeAudioData(
@@ -137,6 +142,8 @@ class SynthEngine {
       );
     }
     irRoomRequest.send();
+
+    this.setReverb(this.settings.reverb.level);
   }
 
   initializeCompressor() {
