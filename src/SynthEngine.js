@@ -9,7 +9,7 @@ class SynthEngine {
     },
     filter: {
       cutoff: 350,
-      resonance: 0,
+      resonance: 0.0001,
       envelope: .5,
       attack: 0,
       release: 1.5,
@@ -23,8 +23,9 @@ class SynthEngine {
     this.initializeGainNode();
 
     // connect nodes
-    this.oscillatorNode.connect(this.filterNode);
-    this.filterNode.connect(this.gainNode);
+    this.oscillatorNode.connect(this.filterNode1);
+    this.filterNode1.connect(this.filterNode2);
+    this.filterNode2.connect(this.gainNode);
     this.gainNode.connect(this.audioContext.destination);
     // start oscillator
     this.oscillatorNode.start();
@@ -81,7 +82,8 @@ class SynthEngine {
     // create Oscillator node
     this.oscillatorNode = this.audioContext.createOscillator();
     // set custom wave type
-    this.oscillatorNode.setPeriodicWave(wave);
+    // this.oscillatorNode.setPeriodicWave(wave);
+    this.oscillatorNode.type = 'square';
     // set frequency value in hertz
     this.oscillatorNode.frequency.value = 440;
   }
@@ -94,8 +96,10 @@ class SynthEngine {
   }
 
   initializeFilterNode() {
-    this.filterNode = this.audioContext.createBiquadFilter();
-    this.filterNode.type = 'lowpass';
+    this.filterNode1 = this.audioContext.createBiquadFilter();
+    this.filterNode1.type = 'lowpass';
+    this.filterNode2 = this.audioContext.createBiquadFilter();
+    this.filterNode2.type = 'lowpass';
   }
 
   playTone(frequency) {
@@ -104,24 +108,35 @@ class SynthEngine {
     this.oscillatorNode.frequency.value = frequency;
 
     // filter setup and envelope
-    this.filterNode.detune.cancelScheduledValues(now);
-    this.filterNode.frequency.value = this.settings.filter.cutoff;
-    this.filterNode.Q.value = this.settings.filter.resonance;
-    this.filterNode.detune.setValueAtTime(0, now);
-    this.filterNode.detune.linearRampToValueAtTime(
-      this.settings.filter.envelope * 7200,
+    this.filterNode1.frequency.cancelScheduledValues(now);
+    this.filterNode2.frequency.cancelScheduledValues(now);
+    this.filterNode1.frequency.setValueAtTime(0, now);
+    this.filterNode2.frequency.setValueAtTime(0, now);
+    this.filterNode1.Q.value = this.settings.filter.resonance;
+    this.filterNode2.Q.value = this.settings.filter.resonance;
+    this.filterNode1.frequency.linearRampToValueAtTime(
+      this.settings.filter.cutoff + ((15000 - this.settings.filter.cutoff) * this.settings.filter.envelope),
       now + this.settings.filter.attack,
     );
-    this.filterNode.detune.setTargetAtTime(
-      0,
+    this.filterNode2.frequency.linearRampToValueAtTime(
+      this.settings.filter.cutoff + ((15000 - this.settings.filter.cutoff) * this.settings.filter.envelope),
+      now + this.settings.filter.attack,
+    );
+    this.filterNode1.frequency.setTargetAtTime(
+      this.settings.filter.cutoff,
       now + this.settings.filter.attack,
       this.settings.filter.release / 10,
     );
-    this.filterNode.detune.setValueAtTime(0, now + this.settings.filter.attack + this.settings.filter.release);
+    this.filterNode2.frequency.setTargetAtTime(
+      this.settings.filter.cutoff,
+      now + this.settings.filter.attack,
+      this.settings.filter.release / 10,
+    );
+    this.filterNode1.frequency.setValueAtTime(this.settings.filter.cutoff, now + this.settings.filter.attack + this.settings.filter.release);
+    this.filterNode2.frequency.setValueAtTime(this.settings.filter.cutoff, now + this.settings.filter.attack + this.settings.filter.release);
 
     // amp setup and envelope
     this.gainNode.gain.cancelScheduledValues(now);
-    this.gainNode.gain.value = 0.0;
     this.gainNode.gain.setValueAtTime(0.0, now);
     this.gainNode.gain.linearRampToValueAtTime(
       this.settings.master.level,

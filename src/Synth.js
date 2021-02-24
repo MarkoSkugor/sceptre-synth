@@ -174,16 +174,16 @@ class Synth extends React.Component {
               units='Hz'
               precision={0}
               initialValue={350}
-              minValue={10}
-              maxValue={5000}
+              minValue={20}
+              maxValue={15000}
               valueChanged={this.setFilterCutoff}
             ></Knob>
             <Knob
               label='Resonance'
-              precision={3}
-              initialValue={0}
-              minValue={-77}
-              maxValue={77}
+              precision={4}
+              initialValue={0.0001}
+              minValue={0.0001}
+              maxValue={3}
               valueChanged={this.setFilterResonance}
             ></Knob>
             <Knob
