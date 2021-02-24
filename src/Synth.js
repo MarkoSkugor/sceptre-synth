@@ -37,6 +37,11 @@ class Synth extends React.Component {
     this.setLevel = this.setLevel.bind(this);
     this.setAmpAttack = this.setAmpAttack.bind(this);
     this.setAmpRelease = this.setAmpRelease.bind(this);
+    this.setFilterCutoff = this.setFilterCutoff.bind(this);
+    this.setFilterResonance = this.setFilterResonance.bind(this);
+    this.setFilterEnvelope = this.setFilterEnvelope.bind(this);
+    this.setFilterAttack = this.setFilterAttack.bind(this);
+    this.setFilterRelease = this.setFilterRelease.bind(this);
     this.onKeyPressed = this.onKeyPressed.bind(this);
   }
 
@@ -66,6 +71,26 @@ class Synth extends React.Component {
 
   setAmpRelease(value) {
     this.synthEngine.setAmpRelease(value);
+  }
+
+  setFilterCutoff(value) {
+    this.synthEngine.setFilterCutoff(value);
+  }
+
+  setFilterResonance(value) {
+    this.synthEngine.setFilterResonance(value);
+  }
+
+  setFilterEnvelope(value) {
+    this.synthEngine.setFilterEnvelope(value);
+  }
+
+  setFilterAttack(value) {
+    this.synthEngine.setFilterAttack(value);
+  }
+
+  setFilterRelease(value) {
+    this.synthEngine.setFilterRelease(value);
   }
 
   onKeyPressed(octave, note) {
@@ -130,6 +155,7 @@ class Synth extends React.Component {
               initialValue={0}
               minValue={0}
               maxValue={10}
+              valueChanged={this.setFilterAttack}
             ></Knob>
             <Knob
               label='Release'
@@ -138,18 +164,11 @@ class Synth extends React.Component {
               initialValue={1.5}
               minValue={0}
               maxValue={10}
+              valueChanged={this.setFilterRelease}
             ></Knob>
           </div>
           <div className='section'>
             <span className='section__label'>Filter</span>
-            <Knob
-              label='Gain'
-              units='dB'
-              precision={1}
-              initialValue={0}
-              minValue={-40}
-              maxValue={40}
-            ></Knob>
             <Knob
               label='Cutoff'
               units='Hz'
@@ -157,13 +176,23 @@ class Synth extends React.Component {
               initialValue={350}
               minValue={10}
               maxValue={5000}
+              valueChanged={this.setFilterCutoff}
             ></Knob>
             <Knob
               label='Resonance'
               precision={3}
-              initialValue={1}
-              minValue={.001}
-              maxValue={100}
+              initialValue={0}
+              minValue={-77}
+              maxValue={77}
+              valueChanged={this.setFilterResonance}
+            ></Knob>
+            <Knob
+              label='Envelope'
+              precision={2}
+              initialValue={.5}
+              minValue={0}
+              maxValue={1}
+              valueChanged={this.setFilterEnvelope}
             ></Knob>
           </div>
         </div>

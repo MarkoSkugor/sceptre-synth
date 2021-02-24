@@ -7,15 +7,24 @@ class SynthEngine {
       attack: 0.01,
       release: 1.5,
     },
+    filter: {
+      cutoff: 350,
+      resonance: 0,
+      envelope: .5,
+      attack: 0,
+      release: 1.5,
+    }
   };
 
   constructor() {
     this.initializeAudioContext();
     this.initializeOscillatorNode();
+    this.initializeFilterNode();
     this.initializeGainNode();
 
     // connect nodes
-    this.oscillatorNode.connect(this.gainNode);
+    this.oscillatorNode.connect(this.filterNode);
+    this.filterNode.connect(this.gainNode);
     this.gainNode.connect(this.audioContext.destination);
     // start oscillator
     this.oscillatorNode.start();
@@ -31,6 +40,26 @@ class SynthEngine {
 
   setAmpRelease(value) {
     this.settings.amp.release = value;
+  }
+
+  setFilterCutoff(value) {
+    this.settings.filter.cutoff = value;
+  }
+
+  setFilterResonance(value) {
+    this.settings.filter.resonance = value;
+  }
+
+  setFilterEnvelope(value) {
+    this.settings.filter.envelope = value;
+  }
+
+  setFilterAttack(value) {
+    this.settings.filter.attack = value;
+  }
+
+  setFilterRelease(value) {
+    this.settings.filter.release = value;
   }
 
   initializeAudioContext() {
@@ -64,14 +93,36 @@ class SynthEngine {
     this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
   }
 
+  initializeFilterNode() {
+    this.filterNode = this.audioContext.createBiquadFilter();
+    this.filterNode.type = 'lowpass';
+  }
+
   playTone(frequency) {
     const now = this.audioContext.currentTime;
 
     this.oscillatorNode.frequency.value = frequency;
 
+    // filter setup and envelope
+    this.filterNode.detune.cancelScheduledValues(now);
+    this.filterNode.frequency.value = this.settings.filter.cutoff;
+    this.filterNode.Q.value = this.settings.filter.resonance;
+    this.filterNode.detune.setValueAtTime(0, now);
+    this.filterNode.detune.linearRampToValueAtTime(
+      this.settings.filter.envelope * 7200,
+      now + this.settings.filter.attack,
+    );
+    this.filterNode.detune.setTargetAtTime(
+      0,
+      now + this.settings.filter.attack,
+      this.settings.filter.release / 10,
+    );
+    this.filterNode.detune.setValueAtTime(0, now + this.settings.filter.attack + this.settings.filter.release);
+
+    // amp setup and envelope
     this.gainNode.gain.cancelScheduledValues(now);
     this.gainNode.gain.value = 0.0;
-    this.gainNode.gain.setValueAtTime( 0.0, now );
+    this.gainNode.gain.setValueAtTime(0.0, now);
     this.gainNode.gain.linearRampToValueAtTime(
       this.settings.master.level,
       now + this.settings.amp.attack,
@@ -82,6 +133,8 @@ class SynthEngine {
       this.settings.amp.release / 10,
     );
     this.gainNode.gain.setValueAtTime(0, now + this.settings.amp.attack + this.settings.amp.release);
+
+
   }
 }
 
