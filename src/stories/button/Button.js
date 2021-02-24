@@ -14,9 +14,13 @@ class Button extends React.Component {
   handleButtonClick($event) {
     this.props.onClick($event);
     this.setState({ active: true });
-    setTimeout(() => {
+    this.timeout = setTimeout(() => {
       this.setState({ active: false });
     }, 50);
+  }
+
+  componentWillUnmount () {
+    clearTimeout(this.timeout);
   }
 
   render() {
@@ -28,7 +32,7 @@ class Button extends React.Component {
           className={`button ${this.state.active ? 'active' : ''}`}
           onClick={this.handleButtonClick}
         >
-          {this.props.label}
+          {this.props.children}
         </button>
       </div>
     );
@@ -37,7 +41,6 @@ class Button extends React.Component {
 
 Button.propTypes = {
   disabled: PropTypes.bool,
-  label: PropTypes.string.isRequired,
   onClick: PropTypes.func,
 };
 
