@@ -58,7 +58,7 @@ class Synth extends React.Component {
     const A4 = 440;
     this.scale = [];
 
-    for (let i = -4; i < 4; i++) {
+    for (let i = -4; i < 6; i++) {
       let a = A4 * Math.pow(2, i);
       let octave = new Octave(a);
       this.scale.push(octave);
