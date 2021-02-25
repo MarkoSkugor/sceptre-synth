@@ -32,6 +32,7 @@ class Synth extends React.Component {
     this.state = {
       started: false,
       waveForm: 'square',
+      startingOctave: 3,
     };
     this.initializeScale();
     this.start = this.start.bind(this);
@@ -109,6 +110,10 @@ class Synth extends React.Component {
     this.synthEngine.playTone(this.scale[octave][note]);
   }
 
+  setStartingOctave(octave) {
+    this.setState({ startingOctave: octave });
+  }
+
   render() {
     if (!this.state.started) {
       return (
@@ -121,6 +126,23 @@ class Synth extends React.Component {
         <div className='flex justify-center'>
           <div className='synth__controls'>
             <div className='flex justify-center'>
+              <div className='section section__octave-buttons'>
+                <span className='section__label'>Octave</span>
+                <Button
+                  disabled={this.state.startingOctave === 7}
+                  onClick={() => this.setStartingOctave(this.state.startingOctave + 1)}
+                  aria-label='up'
+                >
+                  &#9651;
+                </Button>
+                <Button
+                  disabled={this.state.startingOctave === 0}
+                  onClick={() => this.setStartingOctave(this.state.startingOctave - 1)}
+                  aria-label='down'
+                >
+                  &#9661;
+                </Button>
+              </div>
               <div className='section'>
                 <span className='section__label'>Master</span>
                 <Knob
@@ -244,7 +266,7 @@ class Synth extends React.Component {
         </div>
         <Keyboard
           numOctaves={2}
-          startingOctave={3}
+          startingOctave={this.state.startingOctave}
           onKeyPressed={this.onKeyPressed}
         >
         </Keyboard>
