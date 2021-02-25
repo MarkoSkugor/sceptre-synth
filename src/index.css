@@ -21,6 +21,14 @@ code {
     monospace;
 }
 
+.flex {
+  display: flex;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
 button {
   border: none;
   margin: 0;

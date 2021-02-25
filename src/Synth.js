@@ -31,6 +31,7 @@ class Synth extends React.Component {
     super(props);
     this.state = {
       started: false,
+      waveForm: 'square',
     };
     this.initializeScale();
     this.start = this.start.bind(this);
@@ -43,6 +44,7 @@ class Synth extends React.Component {
     this.setFilterEnvelope = this.setFilterEnvelope.bind(this);
     this.setFilterAttack = this.setFilterAttack.bind(this);
     this.setFilterRelease = this.setFilterRelease.bind(this);
+    this.setWaveForm = this.setWaveForm.bind(this);
     this.onKeyPressed = this.onKeyPressed.bind(this);
   }
 
@@ -98,6 +100,11 @@ class Synth extends React.Component {
     this.synthEngine.setFilterRelease(value);
   }
 
+  setWaveForm(waveForm) {
+    this.setState({ waveForm });
+    this.synthEngine.setWaveForm(waveForm);
+  }
+
   onKeyPressed(octave, note) {
     this.synthEngine.playTone(this.scale[octave][note]);
   }
@@ -111,95 +118,128 @@ class Synth extends React.Component {
 
     return (
       <div className='synth'>
-        <div className='synth__controls'>
-          <div className='section'>
-            <span className='section__label'>Master</span>
-            <Knob
-              label='Level'
-              precision={2}
-              initialValue={1}
-              minValue={0}
-              maxValue={1}
-              valueChanged={this.setLevel}
-            ></Knob>
-            <Knob
-              label='Reverb'
-              precision={2}
-              initialValue={.25}
-              minValue={0}
-              maxValue={1}
-              valueChanged={this.setReverb}
-            ></Knob>
+        <div className='flex justify-center'>
+          <div className='synth__controls'>
+            <div className='flex justify-center'>
+              <div className='section'>
+                <span className='section__label'>Master</span>
+                <Knob
+                  label='Level'
+                  precision={2}
+                  initialValue={1}
+                  minValue={0}
+                  maxValue={1}
+                  valueChanged={this.setLevel}
+                ></Knob>
+                <Knob
+                  label='Reverb'
+                  precision={2}
+                  initialValue={.25}
+                  minValue={0}
+                  maxValue={1}
+                  valueChanged={this.setReverb}
+                ></Knob>
+              </div>
+              <div className='section'>
+                <span className='section__label'>Amp Envelope</span>
+                <Knob
+                  label='Attack'
+                  units='s'
+                  precision={2}
+                  initialValue={0.1}
+                  minValue={0.01}
+                  maxValue={10}
+                  valueChanged={this.setAmpAttack}
+                ></Knob>
+                <Knob
+                  label='Release'
+                  units='s'
+                  precision={2}
+                  initialValue={1.5}
+                  minValue={0.1}
+                  maxValue={10}
+                  valueChanged={this.setAmpRelease}
+                ></Knob>
+              </div>
+            </div>
+            <div className='flex justify-center'>
+              <div className='section'>
+                <span className='section__label'>Filter Envelope</span>
+                <Knob
+                  label='Attack'
+                  units='s'
+                  precision={2}
+                  initialValue={0.1}
+                  minValue={0.01}
+                  maxValue={10}
+                  valueChanged={this.setFilterAttack}
+                ></Knob>
+                <Knob
+                  label='Release'
+                  units='s'
+                  precision={2}
+                  initialValue={.5}
+                  minValue={0.01}
+                  maxValue={10}
+                  valueChanged={this.setFilterRelease}
+                ></Knob>
+              </div>
+              <div className='section'>
+                <span className='section__label'>Filter</span>
+                <Knob
+                  label='Cutoff'
+                  units='Hz'
+                  precision={0}
+                  initialValue={350}
+                  minValue={20}
+                  maxValue={15000}
+                  valueChanged={this.setFilterCutoff}
+                ></Knob>
+                <Knob
+                  label='Resonance'
+                  precision={2}
+                  initialValue={0}
+                  minValue={0}
+                  maxValue={10}
+                  valueChanged={this.setFilterResonance}
+                ></Knob>
+                <Knob
+                  label='Envelope'
+                  precision={2}
+                  initialValue={.25}
+                  minValue={0}
+                  maxValue={1}
+                  valueChanged={this.setFilterEnvelope}
+                ></Knob>
+              </div>
+            </div>
           </div>
           <div className='section'>
-            <span className='section__label'>Amp Envelope</span>
-            <Knob
-              label='Attack'
-              units='s'
-              precision={2}
-              initialValue={0.1}
-              minValue={0.01}
-              maxValue={10}
-              valueChanged={this.setAmpAttack}
-            ></Knob>
-            <Knob
-              label='Release'
-              units='s'
-              precision={2}
-              initialValue={1.5}
-              minValue={0.1}
-              maxValue={10}
-              valueChanged={this.setAmpRelease}
-            ></Knob>
-          </div>
-          <div className='section'>
-            <span className='section__label'>Filter Envelope</span>
-            <Knob
-              label='Attack'
-              units='s'
-              precision={2}
-              initialValue={0.1}
-              minValue={0.01}
-              maxValue={10}
-              valueChanged={this.setFilterAttack}
-            ></Knob>
-            <Knob
-              label='Release'
-              units='s'
-              precision={2}
-              initialValue={.5}
-              minValue={0.01}
-              maxValue={10}
-              valueChanged={this.setFilterRelease}
-            ></Knob>
-          </div>
-          <div className='section'>
-            <span className='section__label'>Filter</span>
-            <Knob
-              label='Cutoff'
-              units='Hz'
-              precision={0}
-              initialValue={350}
-              minValue={20}
-              maxValue={15000}
-              valueChanged={this.setFilterCutoff}
-            ></Knob>
-            <Knob
-              label='Resonance'
-              precision={2}
-              initialValue={0}
-              minValue={0}
-              maxValue={10}
-              valueChanged={this.setFilterResonance}
-            ></Knob>
-            <Knob
-              label='Envelope'
-              precision={2}
-              initialValue={.25}
-              minValue={0}
-              maxValue={1}
-              valueChanged={this.setFilterEnvelope}
-            ></Knob>
+            <span className='section__label'>Waveform</span>
+            <Button
+              disabled={this.state.waveForm === 'sine'}
+              onClick={() => this.setWaveForm('sine')}
+            >
+              Sine
+            </Button>
+            <Button
+              disabled={this.state.waveForm === 'square'}
+              onClick={() => this.setWaveForm('square')}
+            >
+              Square
+            </Button>
+            <Button
+              disabled={this.state.waveForm === 'triangle'}
+              onClick={() => this.setWaveForm('triangle')}
+            >
+              Triangle
+            </Button>
+            <Button
+              disabled={this.state.waveForm === 'sawtooth'}
+              onClick={() => this.setWaveForm('sawtooth')}
+            >
+              Sawtooth
+            </Button>
           </div>
         </div>
         <Keyboard
