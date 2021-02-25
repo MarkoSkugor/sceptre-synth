@@ -23,9 +23,7 @@ const KEY_MAP = {
 };
 
 class Keyboard extends React.Component {
-  constructor(props) {
-    super(props);
-
+  componentDidMount() {
     document.addEventListener('keydown', ({ key }) => {
       if (KEY_MAP[key]) {
         let octave = this.props.startingOctave;
