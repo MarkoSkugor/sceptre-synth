@@ -52,7 +52,9 @@ class Knob extends React.Component {
     value = ((rotation * parseFloat(range)) + this.props.minValue).toFixed(this.props.precision);
 
     this.setState({ value });
-    this.props.valueChanged(parseFloat(value));
+    if (this.props.valueChanged) {
+      this.props.valueChanged(parseFloat(value));
+    }
   }
 
   calculateRotation() {
