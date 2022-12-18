@@ -33,6 +33,7 @@ class Synth extends React.Component {
       started: false,
       waveForm: 'square',
       startingOctave: 3,
+      isKeyboardView: false,
     };
     this.initializeScale();
     this.start = this.start.bind(this);
@@ -47,6 +48,7 @@ class Synth extends React.Component {
     this.setFilterRelease = this.setFilterRelease.bind(this);
     this.setWaveForm = this.setWaveForm.bind(this);
     this.onKeyPressed = this.onKeyPressed.bind(this);
+    this.toggleKeyboardView = this.toggleKeyboardView.bind(this);
   }
 
   start() {
@@ -114,6 +116,12 @@ class Synth extends React.Component {
     this.setState({ startingOctave: octave });
   }
 
+  toggleKeyboardView(value) {
+    this.setState({
+      isKeyboardView: value,
+    });
+  }
+
   render() {
     if (!this.state.started) {
       return (
@@ -123,153 +131,172 @@ class Synth extends React.Component {
 
     return (
       <div className='synth'>
-        <div className='flex justify-center'>
-          <div className='synth__controls'>
-            <div className='flex justify-center'>
-              <div className='section section__octave-buttons'>
-                <span className='section__label'>Octave</span>
-                <Button
-                  disabled={this.state.startingOctave === 7}
-                  onClick={() => this.setStartingOctave(this.state.startingOctave + 1)}
-                  aria-label='up'
-                >
-                  &#9651;
-                </Button>
-                <Button
-                  disabled={this.state.startingOctave === 0}
-                  onClick={() => this.setStartingOctave(this.state.startingOctave - 1)}
-                  aria-label='down'
-                >
-                  &#9661;
-                </Button>
+        <div className='section section__keyboard-visibility'>
+          <span className='section__label'>View</span>
+          <Button
+            disabled={this.state.isKeyboardView === false}
+            onClick={() => this.toggleKeyboardView(false)}
+          >
+            Controls
+          </Button>
+          <Button
+            disabled={this.state.isKeyboardView === true}
+            onClick={() => this.toggleKeyboardView(true)}
+          >
+            Keyboard
+          </Button>
+        </div>
+        <div className='synth__container'>
+          <div className={`flex justify-center ${this.state.isKeyboardView ? 'hidden' : ''}`}>
+            <div className='synth__controls'>
+              <div className='flex justify-center'>
+                <div className='section section__octave-buttons'>
+                  <span className='section__label'>Octave</span>
+                  <Button
+                    disabled={this.state.startingOctave === 7}
+                    onClick={() => this.setStartingOctave(this.state.startingOctave + 1)}
+                    aria-label='up'
+                  >
+                    &#9651;
+                  </Button>
+                  <Button
+                    disabled={this.state.startingOctave === 0}
+                    onClick={() => this.setStartingOctave(this.state.startingOctave - 1)}
+                    aria-label='down'
+                  >
+                    &#9661;
+                  </Button>
+                </div>
+                <div className='section'>
+                  <span className='section__label'>Master</span>
+                  <Knob
+                    label='Level'
+                    precision={2}
+                    initialValue={1}
+                    minValue={0}
+                    maxValue={1}
+                    valueChanged={this.setLevel}
+                  ></Knob>
+                  <Knob
+                    label='Reverb'
+                    precision={2}
+                    initialValue={.25}
+                    minValue={0}
+                    maxValue={1}
+                    valueChanged={this.setReverb}
+                  ></Knob>
+                </div>
+                <div className='section'>
+                  <span className='section__label'>Amp Envelope</span>
+                  <Knob
+                    label='Attack'
+                    units='s'
+                    precision={2}
+                    initialValue={0.1}
+                    minValue={0.01}
+                    maxValue={10}
+                    valueChanged={this.setAmpAttack}
+                  ></Knob>
+                  <Knob
+                    label='Release'
+                    units='s'
+                    precision={2}
+                    initialValue={1.5}
+                    minValue={0.1}
+                    maxValue={10}
+                    valueChanged={this.setAmpRelease}
+                  ></Knob>
+                </div>
               </div>
-              <div className='section'>
-                <span className='section__label'>Master</span>
-                <Knob
-                  label='Level'
-                  precision={2}
-                  initialValue={1}
-                  minValue={0}
-                  maxValue={1}
-                  valueChanged={this.setLevel}
-                ></Knob>
-                <Knob
-                  label='Reverb'
-                  precision={2}
-                  initialValue={.25}
-                  minValue={0}
-                  maxValue={1}
-                  valueChanged={this.setReverb}
-                ></Knob>
-              </div>
-              <div className='section'>
-                <span className='section__label'>Amp Envelope</span>
-                <Knob
-                  label='Attack'
-                  units='s'
-                  precision={2}
-                  initialValue={0.1}
-                  minValue={0.01}
-                  maxValue={10}
-                  valueChanged={this.setAmpAttack}
-                ></Knob>
-                <Knob
-                  label='Release'
-                  units='s'
-                  precision={2}
-                  initialValue={1.5}
-                  minValue={0.1}
-                  maxValue={10}
-                  valueChanged={this.setAmpRelease}
-                ></Knob>
+              <div className='flex justify-center'>
+                <div className='section'>
+                  <span className='section__label'>Filter Envelope</span>
+                  <Knob
+                    label='Attack'
+                    units='s'
+                    precision={2}
+                    initialValue={0.1}
+                    minValue={0.01}
+                    maxValue={10}
+                    valueChanged={this.setFilterAttack}
+                  ></Knob>
+                  <Knob
+                    label='Release'
+                    units='s'
+                    precision={2}
+                    initialValue={.5}
+                    minValue={0.01}
+                    maxValue={10}
+                    valueChanged={this.setFilterRelease}
+                  ></Knob>
+                </div>
+                <div className='section'>
+                  <span className='section__label'>Filter</span>
+                  <Knob
+                    label='Cutoff'
+                    units='Hz'
+                    precision={0}
+                    initialValue={350}
+                    minValue={20}
+                    maxValue={15000}
+                    valueChanged={this.setFilterCutoff}
+                  ></Knob>
+                  <Knob
+                    label='Resonance'
+                    precision={2}
+                    initialValue={0}
+                    minValue={0}
+                    maxValue={10}
+                    valueChanged={this.setFilterResonance}
+                  ></Knob>
+                  <Knob
+                    label='Envelope'
+                    precision={2}
+                    initialValue={.25}
+                    minValue={0}
+                    maxValue={1}
+                    valueChanged={this.setFilterEnvelope}
+                  ></Knob>
+                </div>
               </div>
             </div>
-            <div className='flex justify-center'>
-              <div className='section'>
-                <span className='section__label'>Filter Envelope</span>
-                <Knob
-                  label='Attack'
-                  units='s'
-                  precision={2}
-                  initialValue={0.1}
-                  minValue={0.01}
-                  maxValue={10}
-                  valueChanged={this.setFilterAttack}
-                ></Knob>
-                <Knob
-                  label='Release'
-                  units='s'
-                  precision={2}
-                  initialValue={.5}
-                  minValue={0.01}
-                  maxValue={10}
-                  valueChanged={this.setFilterRelease}
-                ></Knob>
-              </div>
-              <div className='section'>
-                <span className='section__label'>Filter</span>
-                <Knob
-                  label='Cutoff'
-                  units='Hz'
-                  precision={0}
-                  initialValue={350}
-                  minValue={20}
-                  maxValue={15000}
-                  valueChanged={this.setFilterCutoff}
-                ></Knob>
-                <Knob
-                  label='Resonance'
-                  precision={2}
-                  initialValue={0}
-                  minValue={0}
-                  maxValue={10}
-                  valueChanged={this.setFilterResonance}
-                ></Knob>
-                <Knob
-                  label='Envelope'
-                  precision={2}
-                  initialValue={.25}
-                  minValue={0}
-                  maxValue={1}
-                  valueChanged={this.setFilterEnvelope}
-                ></Knob>
-              </div>
+            <div className='section'>
+              <span className='section__label'>Waveform</span>
+              <Button
+                disabled={this.state.waveForm === 'sine'}
+                onClick={() => this.setWaveForm('sine')}
+              >
+                Sine
+              </Button>
+              <Button
+                disabled={this.state.waveForm === 'square'}
+                onClick={() => this.setWaveForm('square')}
+              >
+                Square
+              </Button>
+              <Button
+                disabled={this.state.waveForm === 'triangle'}
+                onClick={() => this.setWaveForm('triangle')}
+              >
+                Triangle
+              </Button>
+              <Button
+                disabled={this.state.waveForm === 'sawtooth'}
+                onClick={() => this.setWaveForm('sawtooth')}
+              >
+                Sawtooth
+              </Button>
             </div>
           </div>
-          <div className='section'>
-            <span className='section__label'>Waveform</span>
-            <Button
-              disabled={this.state.waveForm === 'sine'}
-              onClick={() => this.setWaveForm('sine')}
+          <div className={`synth__keyboard ${this.state.isKeyboardView ? '' : 'hidden'}`}>
+            <Keyboard
+              numOctaves={2}
+              startingOctave={this.state.startingOctave}
+              onKeyPressed={this.onKeyPressed}
             >
-              Sine
-            </Button>
-            <Button
-              disabled={this.state.waveForm === 'square'}
-              onClick={() => this.setWaveForm('square')}
-            >
-              Square
-            </Button>
-            <Button
-              disabled={this.state.waveForm === 'triangle'}
-              onClick={() => this.setWaveForm('triangle')}
-            >
-              Triangle
-            </Button>
-            <Button
-              disabled={this.state.waveForm === 'sawtooth'}
-              onClick={() => this.setWaveForm('sawtooth')}
-            >
-              Sawtooth
-            </Button>
+            </Keyboard>
           </div>
         </div>
-        <Keyboard
-          numOctaves={2}
-          startingOctave={this.state.startingOctave}
-          onKeyPressed={this.onKeyPressed}
-        >
-        </Keyboard>
       </div>
     );
   }

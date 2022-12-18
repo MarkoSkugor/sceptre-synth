@@ -5,7 +5,6 @@ $keyboard-height: 200;
 .keyboard__container {
   display: flex;
   height: #{$keyboard-height}px;
-  margin: 25px auto 0;
 }
 
 .keyboard__octave {
