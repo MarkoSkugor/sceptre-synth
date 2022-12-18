@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/sceptre-synth/static/css/main.d50de778.chunk.css",
-    "main.js": "/sceptre-synth/static/js/main.b23043b8.chunk.js",
-    "main.js.map": "/sceptre-synth/static/js/main.b23043b8.chunk.js.map",
+    "main.css": "/sceptre-synth/static/css/main.2a6b439f.chunk.css",
+    "main.js": "/sceptre-synth/static/js/main.b7e6ce14.chunk.js",
+    "main.js.map": "/sceptre-synth/static/js/main.b7e6ce14.chunk.js.map",
     "runtime-main.js": "/sceptre-synth/static/js/runtime-main.116e63b1.js",
     "runtime-main.js.map": "/sceptre-synth/static/js/runtime-main.116e63b1.js.map",
     "static/js/2.d1ec8608.chunk.js": "/sceptre-synth/static/js/2.d1ec8608.chunk.js",
@@ -10,13 +10,13 @@
     "static/js/3.41a063bc.chunk.js": "/sceptre-synth/static/js/3.41a063bc.chunk.js",
     "static/js/3.41a063bc.chunk.js.map": "/sceptre-synth/static/js/3.41a063bc.chunk.js.map",
     "index.html": "/sceptre-synth/index.html",
-    "static/css/main.d50de778.chunk.css.map": "/sceptre-synth/static/css/main.d50de778.chunk.css.map",
+    "static/css/main.2a6b439f.chunk.css.map": "/sceptre-synth/static/css/main.2a6b439f.chunk.css.map",
     "static/js/2.d1ec8608.chunk.js.LICENSE.txt": "/sceptre-synth/static/js/2.d1ec8608.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.116e63b1.js",
     "static/js/2.d1ec8608.chunk.js",
-    "static/css/main.d50de778.chunk.css",
-    "static/js/main.b23043b8.chunk.js"
+    "static/css/main.2a6b439f.chunk.css",
+    "static/js/main.b7e6ce14.chunk.js"
   ]
 }
